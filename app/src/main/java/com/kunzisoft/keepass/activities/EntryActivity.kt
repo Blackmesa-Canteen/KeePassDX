@@ -38,8 +38,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.kunzisoft.keepass.R
-import com.kunzisoft.keepass.activities.helpers.ReadOnlyHelper
 import com.kunzisoft.keepass.activities.helpers.ExternalFileHelper
+import com.kunzisoft.keepass.activities.helpers.ReadOnlyHelper
 import com.kunzisoft.keepass.activities.helpers.SpecialMode
 import com.kunzisoft.keepass.activities.lock.LockingActivity
 import com.kunzisoft.keepass.activities.lock.resetAppTimeoutWhenViewFocusedOrChanged
@@ -318,6 +318,7 @@ class EntryActivity : LockingActivity() {
 
         entryContentsView?.assignURL(entryInfo.url)
         entryContentsView?.assignNotes(entryInfo.notes)
+        entryContentsView?.assignTags(entryInfo.tags)
 
         // Assign custom fields
         if (mDatabase?.allowEntryCustomFields() == true) {

@@ -24,15 +24,27 @@
 	android:layout_height="wrap_content"
 	android:orientation="vertical">
 
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/entry_tags_list_view"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingStart="6dp"
+		android:paddingLeft="6dp"
+		android:paddingEnd="6dp"
+		android:paddingRight="6dp"
+		android:layout_gravity="center"
+		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+		android:orientation="horizontal" />
+
 	<androidx.cardview.widget.CardView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/card_view_margin"
-		android:layout_marginBottom="@dimen/card_view_margin_bottom"
+		android:layout_marginTop="@dimen/card_view_margin_bottom"
 		android:layout_marginStart="@dimen/card_view_margin"
 		android:layout_marginEnd="@dimen/card_view_margin"
 		android:layout_marginLeft="@dimen/card_view_margin"
-		android:layout_marginRight="@dimen/card_view_margin">
+		android:layout_marginRight="@dimen/card_view_margin"
+		android:layout_marginBottom="@dimen/card_view_margin_bottom">
 		<LinearLayout
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"

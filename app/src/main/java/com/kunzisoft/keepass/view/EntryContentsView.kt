@@ -34,17 +34,15 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.kunzisoft.keepass.R
 import com.kunzisoft.keepass.adapters.EntryAttachmentsItemsAdapter
 import com.kunzisoft.keepass.adapters.EntryHistoryAdapter
-import com.kunzisoft.keepass.database.element.Attachment
-import com.kunzisoft.keepass.database.element.Database
-import com.kunzisoft.keepass.database.element.DateInstant
-import com.kunzisoft.keepass.database.element.Entry
+import com.kunzisoft.keepass.adapters.TagsAdapter
+import com.kunzisoft.keepass.database.element.*
 import com.kunzisoft.keepass.database.element.security.ProtectedString
-import com.kunzisoft.keepass.utils.UuidUtil
 import com.kunzisoft.keepass.model.EntryAttachmentState
 import com.kunzisoft.keepass.model.StreamDirection
 import com.kunzisoft.keepass.otp.OtpElement
 import com.kunzisoft.keepass.otp.OtpType
 import com.kunzisoft.keepass.settings.PreferencesUtil
+import com.kunzisoft.keepass.utils.UuidUtil
 import java.util.*
 
 
@@ -54,6 +52,9 @@ class EntryContentsView @JvmOverloads constructor(context: Context,
     : LinearLayout(context, attrs, defStyle) {
 
     private var fontInVisibility: Boolean = false
+
+    private val tagsListView: RecyclerView
+    private val tagsAdapter: TagsAdapter
 
     private val userNameFieldView: EntryField
     private val passwordFieldView: EntryField
@@ -86,6 +87,13 @@ class EntryContentsView @JvmOverloads constructor(context: Context,
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
         inflater?.inflate(R.layout.view_entry_contents, this)
+
+        tagsListView = findViewById(R.id.entry_tags_list_view)
+        tagsAdapter = TagsAdapter(context)
+        tagsListView?.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = tagsAdapter
+        }
 
         userNameFieldView = findViewById(R.id.entry_user_name_field)
         userNameFieldView.setLabel(R.string.entry_user_name)
@@ -247,6 +255,11 @@ class EntryContentsView @JvmOverloads constructor(context: Context,
                 visibility = View.GONE
             }
         }
+    }
+
+    fun assignTags(tags: Tags) {
+        tagsListView.visibility = if (tags.isEmpty()) View.GONE else View.VISIBLE
+        tagsAdapter.setTags(tags)
     }
 
     fun assignCreationDate(date: DateInstant) {
