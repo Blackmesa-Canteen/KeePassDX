@@ -22,7 +22,8 @@
 	android:id="@+id/entry_table"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:orientation="vertical">
+	android:orientation="vertical"
+	android:paddingTop="8dp">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/entry_tags_list_view"
@@ -39,7 +40,7 @@
 	<androidx.cardview.widget.CardView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/card_view_margin_bottom"
+		android:layout_marginTop="2dp"
 		android:layout_marginStart="@dimen/card_view_margin"
 		android:layout_marginEnd="@dimen/card_view_margin"
 		android:layout_marginLeft="@dimen/card_view_margin"
