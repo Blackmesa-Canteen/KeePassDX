@@ -87,6 +87,8 @@ open class PasswordActivity : SpecialModeActivity(), AdvancedUnlockFragment.Buil
 
     private val databaseFileViewModel: DatabaseFileViewModel by viewModels()
 
+    private var mDatabase: Database? = null
+
     private var mDefaultDatabase: Boolean = false
     private var mDatabaseFileUri: Uri? = null
     private var mDatabaseKeyFileUri: Uri? = null
@@ -113,6 +115,8 @@ open class PasswordActivity : SpecialModeActivity(), AdvancedUnlockFragment.Buil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mDatabase = Database.getInstance()
 
         setContentView(R.layout.activity_password)
 
@@ -215,7 +219,9 @@ open class PasswordActivity : SpecialModeActivity(), AdvancedUnlockFragment.Buil
                         if (result.isSuccess) {
                             mDatabaseKeyFileUri = null
                             clearCredentialsViews(true)
-                            launchGroupActivity()
+                            mDatabase?.let { database ->
+                                launchGroupActivity(database)
+                            }
                         } else {
                             var resultError = ""
                             val resultException = result.exception
@@ -296,8 +302,9 @@ open class PasswordActivity : SpecialModeActivity(), AdvancedUnlockFragment.Buil
         getUriFromIntent(intent)
     }
 
-    private fun launchGroupActivity() {
+    private fun launchGroupActivity(database: Database) {
         GroupActivity.launch(this,
+                database,
                 readOnly,
                 { onValidateSpecialMode() },
                 { onCancelSpecialMode() },
@@ -355,14 +362,15 @@ open class PasswordActivity : SpecialModeActivity(), AdvancedUnlockFragment.Buil
     override fun onResume() {
         super.onResume()
 
-        if (Database.getInstance().loaded) {
-            launchGroupActivity()
+        val database = mDatabase
+        if (database?.loaded == true) {
+            launchGroupActivity(database)
         } else {
             mRememberKeyFile = PreferencesUtil.rememberKeyFileLocations(this)
 
             // If the database isn't accessible make sure to clear the password field, if it
             // was saved in the instance state
-            if (Database.getInstance().loaded) {
+            if (mDatabase?.loaded == true) {
                 clearCredentialsViews()
             }
 
@@ -461,11 +469,6 @@ open class PasswordActivity : SpecialModeActivity(), AdvancedUnlockFragment.Buil
 
     override fun onPause() {
         mProgressDatabaseTaskProvider?.unregisterProgressTask()
-
-        // To prevent biometric prompt to appearing outside of the app
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            advancedUnlockFragment?.disconnect(hideViews = false, closePrompt = true)
-        }
 
         // Reinit locking activity UI variable
         LockingActivity.LOCKING_ACTIVITY_UI_VISIBLE_DURING_LOCK = null
@@ -713,7 +716,7 @@ open class PasswordActivity : SpecialModeActivity(), AdvancedUnlockFragment.Buil
             when (resultCode) {
                 LockingActivity.RESULT_EXIT_LOCK -> {
                     clearCredentialsViews()
-                    Database.getInstance().clearAndClose(this)
+                    mDatabase?.clearAndClose(this)
                 }
                 Activity.RESULT_CANCELED -> {
                     clearCredentialsViews()
