@@ -2,6 +2,9 @@
 buildscript {
     ext.kotlin_version = '1.4.31'
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/google/' }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url "https://s01.oss.sonatype.org/content/groups/public" }
         jcenter()
         google()
     }
@@ -13,9 +16,12 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/google/' }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url "https://s01.oss.sonatype.org/content/groups/public" }
+        maven { url "https://jitpack.io" }
         jcenter()
         google()
-        maven { url "https://jitpack.io" }
     }
 }
 
